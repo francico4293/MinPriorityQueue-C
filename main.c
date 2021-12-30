@@ -11,6 +11,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define ARR_CAP 0.75  // max allowed array ratio, i.e., size / capacity
 
@@ -117,6 +118,55 @@ void heapPush(int value, struct dynamicArray *dynArrPtr) {
 }
 
 /**
+ * @brief 
+ * 
+ * @param dynArrPtr 
+ * @return int 
+ */
+int heapPop(struct dynamicArray *dynArrPtr) {
+    int minValue = *(dynArrPtr->array);
+    int parentIndex = 0;
+    int rightChildIndex = (2 * parentIndex) + 1;
+    int leftChildIndex = (2 * parentIndex) + 2;
+    int *statArrPtr = dynArrPtr->array;
+
+    *(dynArrPtr->array) = *(dynArrPtr->array + dynArrPtr->size - 1);
+    dynArrPtr->size--;
+    
+    while (true) {
+        // the parent has left and right children
+        if (rightChildIndex < dynArrPtr->size - 1 && leftChildIndex < dynArrPtr->size - 1) {
+            // the parent value is greater than both children - swap with min
+            if (statArrPtr[parentIndex] > statArrPtr[rightChildIndex] && statArrPtr[parentIndex] > statArrPtr[leftChildIndex]) {
+            
+            // the parent value is greater than only the right child
+            } else if (statArrPtr[parentIndex] > statArrPtr[rightChildIndex]) {
+            
+            // the parent value is greater than only the left child
+            } else if (statArrPtr[parentIndex] > statArrPtr[leftChildIndex]) {
+            
+            // the parent value is less than both children
+            } else {    
+                return;  // exit function
+            }
+        // the parent only has a right child
+        } else if (rightChildIndex < dynArrPtr->size - 1) {
+        
+        // the parent only has a left child
+        } else if (leftChildIndex < dynArrPtr->size - 1) {
+        
+        // the parent doesn't have children
+        } else {
+
+        }
+
+        // update left and right child indices based on new parent index
+        leftChildIndex = (2 * parentIndex) + 1;
+        rightChildIndex = (2 * parentIndex) + 2;
+    }
+}
+
+/**
  * @brief Driver code for minimum priority queue implementation
  * 
  * @return int 
@@ -140,6 +190,8 @@ int main(void) {
 
     heapPush(1, &priorityQueue);
     printPriorityQueue(&priorityQueue);
+
+    heapPop(&priorityQueue);
 
     return 0;
 }
