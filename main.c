@@ -92,15 +92,28 @@ void heapPush(int value, struct dynamicArray *dynArrPtr) {
     // set current index and the associated parent index
     int currIndex = dynArrPtr->size;
     int parentIndex = (currIndex - 1) / 2;
+    int temp = 0;
 
     // check if the new element being added will exceed array capacity
     if ((float) (dynArrPtr->size + 1) / (float) dynArrPtr->capacity >= ARR_CAP) {
         upSizeArray(dynArrPtr);  // resize the underlying static array
     }
 
-    // add the value to the underlying static array
+    // add value to next open spot in array
     *(dynArrPtr->array + dynArrPtr->size) = value;
-    dynArrPtr->size++;  // increment size
+
+    // percolate added value up until root is reached or until value is greater than the
+    // value of its parent
+    while (currIndex > 0 && *(dynArrPtr->array + currIndex) < *(dynArrPtr->array + parentIndex)) {
+        temp = *(dynArrPtr->array + parentIndex);
+        *(dynArrPtr->array + parentIndex) = *(dynArrPtr->array + currIndex);
+        *(dynArrPtr->array + currIndex) = temp;
+
+        currIndex = parentIndex;
+        parentIndex = (currIndex - 1) / 2;
+    }
+
+    dynArrPtr->size++;  // increment array size
 }
 
 /**
@@ -113,16 +126,19 @@ int main(void) {
 
     printPriorityQueue(&priorityQueue);
 
+    heapPush(20, &priorityQueue);
+    printPriorityQueue(&priorityQueue);
+
+    heapPush(15, &priorityQueue);
+    printPriorityQueue(&priorityQueue);
+
     heapPush(5, &priorityQueue);
     printPriorityQueue(&priorityQueue);
 
     heapPush(10, &priorityQueue);
     printPriorityQueue(&priorityQueue);
 
-    heapPush(15, &priorityQueue);
-    printPriorityQueue(&priorityQueue);
-
-    heapPush(20, &priorityQueue);
+    heapPush(1, &priorityQueue);
     printPriorityQueue(&priorityQueue);
 
     return 0;
