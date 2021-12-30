@@ -118,46 +118,71 @@ void heapPush(int value, struct dynamicArray *dynArrPtr) {
 }
 
 /**
- * @brief 
+ * @brief Returns the min value in the priority queue
  * 
- * @param dynArrPtr 
- * @return int 
+ * @param dynArrPtr The address of the dynamic array struct
+ * @return int The minimum value in the priority queue
  */
 int heapPop(struct dynamicArray *dynArrPtr) {
     int minValue = *(dynArrPtr->array);
+    int temp = 0;
     int parentIndex = 0;
     int rightChildIndex = (2 * parentIndex) + 1;
     int leftChildIndex = (2 * parentIndex) + 2;
     int *statArrPtr = dynArrPtr->array;
 
+    // assign last node value to root node
     *(dynArrPtr->array) = *(dynArrPtr->array + dynArrPtr->size - 1);
-    dynArrPtr->size--;
+    dynArrPtr->size--;  // decrease array size by 1
     
     while (true) {
         // the parent has left and right children
         if (rightChildIndex < dynArrPtr->size - 1 && leftChildIndex < dynArrPtr->size - 1) {
             // the parent value is greater than both children - swap with min
             if (statArrPtr[parentIndex] > statArrPtr[rightChildIndex] && statArrPtr[parentIndex] > statArrPtr[leftChildIndex]) {
-            
+                // left value is less than right value
+                if (statArrPtr[leftChildIndex] < statArrPtr[rightChildIndex]) {
+                    temp = statArrPtr[leftChildIndex];
+                    statArrPtr[leftChildIndex] = statArrPtr[parentIndex];
+                    statArrPtr[parentIndex] = temp;
+                    parentIndex = leftChildIndex;
+                } else {
+                    temp = statArrPtr[rightChildIndex];
+                    statArrPtr[rightChildIndex] = statArrPtr[parentIndex];
+                    statArrPtr[parentIndex] = temp;
+                    parentIndex = rightChildIndex;
+                }
             // the parent value is greater than only the right child
             } else if (statArrPtr[parentIndex] > statArrPtr[rightChildIndex]) {
-            
+                temp = statArrPtr[rightChildIndex];
+                statArrPtr[rightChildIndex] = statArrPtr[parentIndex];
+                statArrPtr[parentIndex] = temp;
+                parentIndex = rightChildIndex;
             // the parent value is greater than only the left child
             } else if (statArrPtr[parentIndex] > statArrPtr[leftChildIndex]) {
-            
+                temp = statArrPtr[leftChildIndex];
+                statArrPtr[leftChildIndex] = statArrPtr[parentIndex];
+                statArrPtr[parentIndex] = temp;
+                parentIndex = leftChildIndex;
             // the parent value is less than both children
             } else {    
-                return;  // exit function
+                return minValue;  // exit function and return min
             }
-        // the parent only has a right child
-        } else if (rightChildIndex < dynArrPtr->size - 1) {
-        
-        // the parent only has a left child
-        } else if (leftChildIndex < dynArrPtr->size - 1) {
-        
+        // the parent only has a right child and parent value is greater than right child value
+        } else if (rightChildIndex < dynArrPtr->size - 1 && statArrPtr[parentIndex] > statArrPtr[rightChildIndex]) {
+            temp = statArrPtr[rightChildIndex];
+            statArrPtr[rightChildIndex] = statArrPtr[parentIndex];
+            statArrPtr[parentIndex] = temp;
+            parentIndex = rightChildIndex;
+        // the parent only has a left child and parent value is greater than left child value
+        } else if (leftChildIndex < dynArrPtr->size - 1 && statArrPtr[parentIndex] > statArrPtr[leftChildIndex]) {
+            temp = statArrPtr[leftChildIndex];
+            statArrPtr[leftChildIndex] = statArrPtr[parentIndex];
+            statArrPtr[parentIndex] = temp;
+            parentIndex = leftChildIndex;
         // the parent doesn't have children
         } else {
-
+            return minValue;
         }
 
         // update left and right child indices based on new parent index
@@ -191,7 +216,22 @@ int main(void) {
     heapPush(1, &priorityQueue);
     printPriorityQueue(&priorityQueue);
 
-    heapPop(&priorityQueue);
+    printf("\n");
+
+    printf("Min=%d, ", heapPop(&priorityQueue));
+    printPriorityQueue(&priorityQueue);
+
+    printf("Min=%d, ", heapPop(&priorityQueue));
+    printPriorityQueue(&priorityQueue);
+
+    printf("Min=%d, ", heapPop(&priorityQueue));
+    printPriorityQueue(&priorityQueue);
+
+    printf("Min=%d, ", heapPop(&priorityQueue));
+    printPriorityQueue(&priorityQueue);
+
+    printf("Min=%d, ", heapPop(&priorityQueue));
+    printPriorityQueue(&priorityQueue);
 
     return 0;
 }
